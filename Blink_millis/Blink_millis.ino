@@ -12,9 +12,9 @@ Serial.begin(9600); //No connection established
 Compilation error: No connection establishedInicia a comunicação serial com a taxa de 9600 bits por segundo.
 pulseIn(pino, valor, tempo_de_espera) valor: HIGH ou LOW tempo(opcional) microsegundos (unsigned long)
 */
-
 #define LED 2
 char s;
+int PORTAS[] = {16, 5, 4, 0, 2, 14, 12, 13, 15, 3, 1};// 11 portas
 
 int tempo = 1000;
 unsigned long int tempoAnterior;

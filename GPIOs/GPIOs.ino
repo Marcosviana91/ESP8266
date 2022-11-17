@@ -11,6 +11,7 @@
 #define D10 1
 //#define LED_BUILTIN 2
 //A0 porta analógica
+int PORTAS[] = {16, 5, 4, 0, 2, 14, 12, 13, 15, 3, 1};// 11 portas
 
 void setup() {
 }
