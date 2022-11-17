@@ -35,8 +35,8 @@ void apagarTudo() {
 }
 //A0 porta analógica
 
-const char* ssid = "VIVOFIBRA-5A70";
-const char* password = "778D54EB67";
+const char* ssid = "Marcos Viana";
+const char* password = "12345677";
 
 ESP8266WebServer server(80);
 
@@ -49,7 +49,7 @@ void controles() {
   textoHTML += "Porta A0: ";
   textoHTML += analogRead(A0);
   textoHTML += "<br>";
-  textoHTML += "Porta digital: ";
+  textoHTML += "Porta digital: <br>";
   for (int p=0; p<=11; p++) {
     textoHTML += "Porta D";
     textoHTML += p;
@@ -57,26 +57,53 @@ void controles() {
     textoHTML += digitalRead(PORTAS[p]);
     textoHTML += "<br>";
   }
+
+  if (server.args()>0) {
+    for (short int i = 0; i < server.args(); i++) {
+      if (server.argName(i) == "porta") {
+        if (isDigit(server.arg(i)[0])) {
+          apagarTudo();
+          Serial.print("Porta " + char(paraInt(server.arg(i)[0])) + char(!digitalRead(PORTAS[paraInt(server.arg(i)[0])])) );
+          digitalWrite(PORTAS[paraInt(server.arg(i)[0])], !digitalRead(PORTAS[paraInt(server.arg(i)[0])]));
+        }
+      }
+    }
+  }
   
   server.send(200, "text/html", textoHTML);
 }
 //Fim da minha edição
 void handleRoot() {
-  digitalWrite(led, 1);
 
   String pagina_principal_HTML;
-  String title_pagina_HTML = "Página Principal";
+  String title_pagina_HTML = "ESP8266 | Página Principal";
+  String estado_GPOIs = "";
   
   //Adicione aqui o CSS
-  String pagina_principal_CSS = "h1 {color: blue;}";
-  
+  String pagina_principal_CSS = "h1 {color: blue;text-align: center;}body>p {padding: 0px 10px;text-indent: 25px;text-align: justify;}div#estados {max-width: 80%;margin: auto;}div#GPIOs>p{ !important padding: 0px;margin: 0px;}div#GPIOs {border: 2px solid black;border-radius: 15px;padding: 10px;background-color: aquamarine;}p#Ligado strong {color: blue;}p#Ligado strong::after {content: '✔️';}p#Desligado strong {color: red;}p#Desligado strong::after {content: '✖️';}";
+ 
+//<p id='Ligado'>D0: <strong>Ligado</strong>. </p>
+//<p id='Desligado'>D1: <strong>Desligado</strong>. </p>  
+  for (int p=0; p<=11; p++) {
+    if (digitalRead(PORTAS[p])) {
+      estado_GPOIs +="<p id='Ligado'>D";
+      estado_GPOIs += String(p);
+      estado_GPOIs += ": <strong>Ligado</strong>. </p>";
+    }
+    else {
+      estado_GPOIs +="<p id='Desligado'>D";
+      estado_GPOIs += String(p);
+      estado_GPOIs += ": <strong>Desligado</strong>. </p>";
+    }
+  }
   //Adicione aqui o conteúdo do corpo da página
-  String pagina_body_HTML = "<h1>Bem-Vindo!</h1><hr>";
-  
+  String pagina_body_HTML = "<h1>Bem-Vindo!</h1><p>Está é a página principal do ESP8266, construída pela função <strong>handleRoot()</strong>. Para modificar esta página, modifique esta função.<hr></p><div id='estados'><h2>Estado das GPIOs</h2><p>Estado atual das GPIOs:</p><div id='GPIOs'>" + estado_GPOIs + "</div>";
+
   //Adiciona o cabeçalho HTML
   pagina_principal_HTML = "<!DOCTYPE html><html lang='pt-br'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>";
   pagina_principal_HTML  += "<title>" + title_pagina_HTML + "</title><style>" + pagina_principal_CSS + "</style></head><body>" + pagina_body_HTML + "</body></html>";
-  
+
+  digitalWrite(led, 1);
   server.send(200, "text/html", pagina_principal_HTML);
   digitalWrite(led, 0);
 }
@@ -134,13 +161,10 @@ void setup(void) {
   }
 
   server.on("/", handleRoot);
-
   server.on("/controles", controles);//direciona a pagina para uma função
-
   server.on("/inline", []() {
     server.send(200, "text/plain", "this works as well");
   });//assim a função inteira está na chamada
-
   server.onNotFound(handleNotFound);
 
   server.begin();
@@ -151,7 +175,8 @@ void setup(void) {
 
 void loop(void) {
   server.handleClient();
-    if (Serial.available() > 0)
+  
+  if (Serial.available() > 0)
   {
     leitura = Serial.read();
     Serial.print("Digitou: ");
