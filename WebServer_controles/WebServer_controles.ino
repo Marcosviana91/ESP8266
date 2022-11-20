@@ -17,13 +17,14 @@
 int PORTAS[] = {16, 5, 4, 0, 2, 14, 12, 13, 15, 3, 1};// 11 portas
 
 int porta_atual, porta_anterior;
-char funcao_atual = 't';//t: testar() p: piscar() a: acender() (um por vez)
+char funcao_atual = 'a';//t: testar() p: piscar() a: acender() (um por vez)
 String leitura;
 
+void lerSerial();
 void piscar();
 void acender();
 void testar();
-void lerSerial();
+String montarPagina(String titulo, String contuedo);
 
 int tempo = 500;
 
@@ -39,23 +40,18 @@ const char* password = "12345677";
 ESP8266WebServer server(80);
 
 void controles() {
-  String textoHTML;//inserir o código HTML aqui.
-
-  textoHTML = "<h1>Status das portas:</h1><br>";
-  textoHTML += "Porta A0: ";
-  textoHTML += analogRead(A0);
-  textoHTML += "<br>";
-  textoHTML += "Porta digital: <br>";
-  for (int p = 0; p <= 11; p++) {
-    textoHTML += "Porta D";
-    textoHTML += p;
-    textoHTML += ": ";
-    textoHTML += digitalRead(PORTAS[p]);
-    textoHTML += "<br>";
-  }
-
+  String textoHTML = "<h2>Controle das GPIOs</h2><div>";//inserir o código HTML aqui.
   if (server.args() > 0) {
+    String message = "\nMethod: ";
+    message += (server.method() == HTTP_GET) ? "GET" : "POST";
+    message += "\nArguments: ";
+    message += server.args();
+    message += "\n";
     for (short int i = 0; i < server.args(); i++) {
+      message += String(server.argName(i));
+      message += ": " + String(server.arg(i));
+      message += "\n";
+      Serial.println(message);
       if (server.argName(i) == "porta") {
         if (isDigit(server.arg(i)[0])) {
           porta_atual = String(server.arg(i)[0]).toInt();
@@ -63,47 +59,54 @@ void controles() {
             porta_anterior = -1;
           }
         }
+      } else if (server.argName(i) == "funcao") {
+        if (server.arg(i) == "testar") {
+          funcao_atual = 't';
+        } else if (server.arg(i) == "piscar") {
+          funcao_atual = 'p';
+        } else if (server.arg(i) == "acender") {
+          funcao_atual = 'a';
+        } else if (server.arg(i) == "-") {
+          porta_atual = -1;
+          apagarTudo();
+        }
       }
     }
   }
-
-  server.send(200, "text/html", textoHTML);
+  for (int p = 0; p <= 11; p++) {
+    textoHTML += "<p>Porta D";
+    textoHTML += p;
+    textoHTML += ": ";
+    textoHTML += "<form action='' method='post'><input type='hidden' name='porta' value='" + String(p) + "'><button>";
+    textoHTML += (digitalRead(PORTAS[p]) == 1) ? "Desligar" : "Ligar";
+    textoHTML += "</button></form></p>";
+  }
+  textoHTML += "<p>FUNÇÕES:</p><form action='' method='post'><input type='hidden' name='funcao' value='acender'><button>Manter Aceso</button></form><br><form action='' method='post'><input type='hidden' name='funcao' value='piscar'><button>Manter piscando</button></form><br><form action='' method='post'><input type='hidden' name='funcao' value='testar'><button>Apenas testar</button></form><br><form action='' method='post'><input type='hidden' name='funcao' value='-'><button>Desligar Tudo</button></form>";
+  server.send(200, "text/html", montarPagina("ESP8266 | Controles", textoHTML));
 }
 
 void handleRoot() {
 
-  String pagina_principal_HTML;
-  String title_pagina_HTML = "ESP8266 | Página Principal";
-  String estado_GPOIs = "";
-
-  //Adicione aqui o CSS
-  String pagina_principal_CSS = "h1 {color: blue;text-align: center;}body>p {padding: 0px 10px;text-indent: 25px;text-align: justify;}div#estados {max-width: 80%;margin: auto;}div#GPIOs>p{ !important padding: 0px;margin: 0px;}div#GPIOs {border: 2px solid black;border-radius: 15px;padding: 10px;background-color: aquamarine;}p#Ligado strong {color: blue;}p#Ligado strong::after {content: '✔️';}p#Desligado strong {color: red;}p#Desligado strong::after {content: '✖️';}";
-
+  String estado_GPIOs = "<h2>Estado das GPIOs</h2><div>";
+  estado_GPIOs += "<p>Porta A0: " + String(analogRead(A0)) + "</p>";
   //<p id='Ligado'>D0: <strong>Ligado</strong>. </p>
   //<p id='Desligado'>D1: <strong>Desligado</strong>. </p>
   for (int p = 0; p <= 11; p++) {
     if (digitalRead(PORTAS[p])) {
-      estado_GPOIs += "<p id='Ligado'>D";
-      estado_GPOIs += String(p);
-      estado_GPOIs += ": <strong>Ligado</strong>. </p>";
+      estado_GPIOs += "<p id='Ligado'>D";
+      estado_GPIOs += String(p);
+      estado_GPIOs += ": <strong>Ligado</strong></p>";
     }
     else {
-      estado_GPOIs += "<p id='Desligado'>D";
-      estado_GPOIs += String(p);
-      estado_GPOIs += ": <strong>Desligado</strong>. </p>";
+      estado_GPIOs += "<p id='Desligado'>D";
+      estado_GPIOs += String(p);
+      estado_GPIOs += ": <strong>Desligado</strong>. </p>";
     }
   }
-  //Adicione aqui o conteúdo do corpo da página
-  String pagina_body_HTML = "<h1>Bem-Vindo!</h1><p>Está é a página principal do ESP8266, construída pela função <strong>handleRoot()</strong>. Para modificar esta página, modifique esta função.</p><hr><div id='estados'><h2>Estado das GPIOs</h2><p>Estado atual das GPIOs:</p><div id='GPIOs'>" + estado_GPOIs + "</div></div>";
-  pagina_body_HTML += "<footer><p>Visualizar página de <a href='/controles'>Controles</a>.</p></footer>";
-
-  //Adiciona o cabeçalho HTML
-  pagina_principal_HTML = "<!DOCTYPE html><html lang='pt-br'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>";
-  pagina_principal_HTML  += "<title>" + title_pagina_HTML + "</title><style>" + pagina_principal_CSS + "</style></head><body>" + pagina_body_HTML + "</body></html>";
-
-  digitalWrite(D4, 1);
-  server.send(200, "text/html", pagina_principal_HTML);
-  digitalWrite(D4, 0);
+  estado_GPIOs += "</div>";
+  digitalWrite(D4, !digitalRead(D4));
+  server.send(200, "text/html", montarPagina("ESP8266 | Página Principal", estado_GPIOs));
+  digitalWrite(D4, !digitalRead(D4));
 }
 
 void handleNotFound() {
@@ -218,6 +221,7 @@ void testar() {//Liga e desliga a porta por 500 milisegundos
     apagarTudo();
   }
 }
+
 void acender() {//Liga porta
   if (porta_atual != porta_anterior && porta_atual >= 0)
   {
@@ -226,6 +230,7 @@ void acender() {//Liga porta
   }
   digitalWrite(PORTAS[porta_atual], 1);
 }
+
 void piscar() {//Liga e desliga a porta por 500 milisegundos repetidamente
   apagarTudo();
   if (porta_atual >= 0)
@@ -235,4 +240,12 @@ void piscar() {//Liga e desliga a porta por 500 milisegundos repetidamente
     apagarTudo();
     delay(500);
   }
+}
+
+String montarPagina(String titulo, String contuedo) {
+  String estilo_CSS = "body>p {padding: 0px 10px;text-indent: 25px;text-align: justify;}header > hr {padding: 0px;margin-top: -0.8em;margin-bottom: 2em;}h1 {color: blue;text-align: center;}main#estados {max-width: 80%;margin: auto;}main>div {border: 2px solid black;border-radius: 15px;padding: 10px;background-color: aquamarine;}main > div > p { !importantpadding: 0px;margin: 0px;}form {display: inline;}p#Ligado strong {color: blue;}p#Ligado strong::after {content: '✔️';}p#Desligado strong {color: red;}p#Desligado strong::after {content: '✖️';}footer > hr {padding: 0px;margin-top: 2em;margin-bottom: -0.8em;}footer a {border: 1px solid black;border-radius: 10%;background-color: aquamarine;padding: 2px 5px;margin: 0px 5px;}";
+  String HTML = "<!DOCTYPE html><html lang='pt-br'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>" + titulo + "</title><style>" + estilo_CSS + "</style></head>";
+  HTML += "<body><header><h1>Bem-Vindo!</h1><p>Está é a página <strong>" + titulo + "</strong> do ESP8266.</p><hr></header><main>" + contuedo + "</main><footer><hr><br><nav><a href='../'>Início</a><a href='./controles'>Controles</a></nav></footer></body></html>";
+
+  return HTML;
 }

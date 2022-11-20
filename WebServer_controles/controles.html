@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang='pt-br'>
+<!-- Este arquivo é o modelo usado para gerar o arquivo no ESP8266 -->
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=0.8'>
+    <title>ESP8266 | Página de Controle.</title>
+    <link rel='stylesheet' href='style.css'>
+</head>
+
+<body>
+    <header>
+        <h1>Bem-Vindo!</h1>
+        <p>
+            Está é a página de controle do ESP8266, construída pela função <strong>controles()</strong>. Para modificar
+            esta página, modifique esta função.
+        </p>
+        <hr>
+    </header>
+    <main>
+        <h2>Controle das GPIOs</h2>
+        <div>
+            <p>Dados fictícios:</p>
+            <p>
+                D0:
+                <form action='' method='post'>
+                    <input type='hidden' name='porta' value='0'>
+                    <button id="alternar">Ligar</button>
+                </form>
+            </p>
+            <p>
+                D1: <strong>Ligado</strong>
+                <form action='' method='post'>
+                    <input type='hidden' name='porta' value='1'>
+                    <button>Ligar</button>
+                </form>
+            </p>
+            <p>
+                D2: <strong>Ligado</strong>
+                <form action='' method='post'>
+                    <input type='hidden' name='porta' value='2'>
+                    <button>Ligar</button>
+                </form>
+            </p>
+            <p>
+                D3: <strong>Ligado</strong>
+                <form action='' method='post'>
+                    <input type='hidden' name='porta' value='3'>
+                    <button>Ligar</button>
+                </form>
+            </p>
+            <br>
+            <p>FUNÇÕES:</p>
+            <form action='' method='post'>
+                <input type='hidden' name='funcao' value='acender'>
+                <button>Manter Aceso</button>
+            </form>
+            <form action='' method='post'>
+                <input type='hidden' name='funcao' value='piscar'>
+                <button>Manter piscando</button>
+            </form>
+            <form action='' method='post'>
+                <input type='hidden' name='funcao' value='testar'>
+                <button>Apenas testar</button>
+            </form>
+            <form action='' method='post'>
+                <input type='hidden' name='funcao' value='-'>
+                <button>Desligar Tudo</button>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <hr>
+        <br>
+        <nav>
+            <a href='../'>Início</a>
+            <a href='./controles'>Controles</a>
+        </nav>
+    </footer>
+</body>
+
+</html>

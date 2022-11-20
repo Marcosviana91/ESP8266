@@ -1,56 +1,25 @@
 <!DOCTYPE html>
 <html lang='pt-br'>
 <!-- Este arquivo é o modelo usado para gerar o arquivo no ESP8266 -->
+
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Página Principal.</title>
-    <style>
-        h1 {
-            color: blue;
-            text-align: center;
-        }
-        body>p {
-            padding: 0px 10px;
-            text-indent: 25px;
-            text-align: justify;
-        }
-        div#estados {
-            max-width: 80%;
-            margin: auto;
-        }
-        div#GPIOs>p{ !important
-            padding: 0px;
-            margin: 0px;
-        }
-        div#GPIOs {
-            border: 2px solid black;
-            border-radius: 15px;
-            padding: 10px;
-            background-color: aquamarine;
-        }
-        p#Ligado strong {
-            color: blue;
-        }
-        p#Ligado strong::after {
-            content: '✔️';
-        }
-        p#Desligado strong {
-            color: red;
-        }
-        p#Desligado strong::after {
-            content: '✖️';
-        }
-    </style>
+    <title>ESP8266 | Página Principal.</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1>Bem-Vindo!</h1>
-    <p>
-        Está é a página principal do ESP8266, construída pela função <strong>handleRoot()</strong>. Para modificar esta página, modifique esta função.
-    </p>
-    <hr>
-    <div id="estados">
+    <header>
+        <h1>Bem-Vindo!</h1>
+        <p>
+            Está é a página principal do ESP8266, construída pela função <strong>handleRoot()</strong>. Para modificar
+            esta página, modifique esta função.
+        </p>
+        <hr>
+    </header>
+    <main id="estados">
+
         <h2>Estado das GPIOs</h2>
         <p>Estado atual das GPIOs:</p>
         <div id='GPIOs'>
@@ -60,11 +29,15 @@
             <p id='Desligado'>D2: <strong>Desligado</strong>. </p>
             <p id='Ligado'>D2: <strong>Ligado</strong>. </p>
         </div>
-    </div>
+    </main>
     <footer>
-        <p>
-            Visualizar página de <a href="./controles.html">Controles</a>.
-        </p>
+        <hr>
+        <br>
+        <nav>
+            <a href="../">Início</a>
+            <a href="./controles">Controles</a>
+        </nav>
     </footer>
 </body>
+
 </html>
