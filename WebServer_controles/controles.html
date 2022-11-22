@@ -1,12 +1,101 @@
 <!DOCTYPE html>
 <html lang='pt-br'>
-<!-- Este arquivo é o modelo usado para gerar o arquivo no ESP8266 -->
+<!--
+    Este arquivo é o modelo usado para gerar o arquivo no ESP8266
+    Palavras chaves serão substituídas por valores calculados pelo sistema:
+    $text_GPIO_D0$ será substituído pelo valor 'ligado' ou 'desligado' de acordo com seu estado.
+    $name_GPIO_D0$ será substituído pelo 'nome' da porta (D0 ... A0)
+-->
 
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=0.8'>
+    <meta http-equiv='refresh' content='2'>
     <title>ESP8266 | Página de Controle.</title>
-    <link rel='stylesheet' href='style.css'>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            background-color: aqua;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            padding: 5px;
+        }
+
+        p {
+            padding: 3px;
+        }
+
+        hr {
+            width: 75%;
+            margin: 10px auto;
+            border-color: aquamarine;
+        }
+
+        #GPIOs, #funcoes {
+            margin: 10px;
+            padding: 5px 10px;
+            border: 1px solid black;
+            border-radius: 15px;
+            background-color: aquamarine;
+        }
+
+        div#lista * {
+            display: inline;
+        }
+        
+        
+        button {
+            transition-duration: 100ms;
+            border-radius: 5px;
+            border: 1px solid black;
+            padding: 5px;
+            margin: 2px;
+            box-shadow: 1px 1px black;
+        }
+        button:hover {
+            background-color: rgb(0, 138, 138);
+            color: white;
+            box-shadow: inset 1px 1px black;
+        }
+
+        .ligado>strong {
+            color: blue;
+            text-transform: uppercase;
+        }
+
+        .desligado>strong {
+            color: red;
+            text-transform: uppercase;
+        }
+
+        input {
+            text-align: right;
+            background-color: aqua;
+        }
+
+        footer>nav {
+            background-color: rgb(0, 112, 112);
+            padding: 10px;
+        }
+        footer a {
+            transition: 200ms;
+            margin-right: 10px;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        footer a:hover {
+            color: black;
+            background-color: aquamarine;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,57 +109,46 @@
     </header>
     <main>
         <h2>Controle das GPIOs</h2>
-        <div>
-            <p>Dados fictícios:</p>
-            <p>
-                D0:
+        <section id='funcoes'>
+            <h3>FUNÇÕES:</h3>
+            <div id='lista'>
                 <form action='' method='post'>
-                    <input type='hidden' name='porta' value='0'>
-                    <button id="alternar">Ligar</button>
+                    <input type='hidden' name='funcao' value='acender'>
+                    <button>Manter Aceso</button>
                 </form>
-            </p>
-            <p>
-                D1: <strong>Ligado</strong>
                 <form action='' method='post'>
-                    <input type='hidden' name='porta' value='1'>
-                    <button>Ligar</button>
+                    <input type='hidden' name='funcao' value='piscar'>
+                    <button>Manter piscando</button>
                 </form>
-            </p>
-            <p>
-                D2: <strong>Ligado</strong>
                 <form action='' method='post'>
-                    <input type='hidden' name='porta' value='2'>
-                    <button>Ligar</button>
+                    <input type='hidden' name='funcao' value='testar'>
+                    <button>Apenas testar</button>
                 </form>
-            </p>
-            <p>
-                D3: <strong>Ligado</strong>
-                <form action='' method='post'>
-                    <input type='hidden' name='porta' value='3'>
-                    <button>Ligar</button>
-                </form>
-            </p>
-            <br>
-            <p>FUNÇÕES:</p>
+            </div>
+        </section>
+        <section id='GPIOs'>
+            <h3>PORTAS:</h3>
             <form action='' method='post'>
-                <input type='hidden' name='funcao' value='acender'>
-                <button>Manter Aceso</button>
-            </form>
-            <form action='' method='post'>
-                <input type='hidden' name='funcao' value='piscar'>
-                <button>Manter piscando</button>
-            </form>
-            <form action='' method='post'>
-                <input type='hidden' name='funcao' value='testar'>
-                <button>Apenas testar</button>
-            </form>
-            <form action='' method='post'>
-                <input type='hidden' name='funcao' value='-'>
+                <input type='hidden' name='porta' value='-1'>
                 <button>Desligar Tudo</button>
             </form>
-        </div>
+            <br>
+                <form action='' method='post'>
+                    <input type='' name='porta' value='$name_GPIO_D0$' readonly>
+                    <button class='$text_GPIO_D0$'>$text_GPIO_D0$</button>
+                </form>
+                <form action='' method='post'>
+                    <input type='' name='porta' value='$name_GPIO_D1$' readonly>
+                    <button class='$text_GPIO_D1$'>$text_GPIO_D1$</button>
+                </form>
+                <form action='' method='post'>
+                    <input type='' name='porta' value='$name_GPIO_D1$' readonly>
+                    <button class='ligado'>ligado</button>
+                </form>
+        </section>
     </main>
     <footer>
+        <br>
         <hr>
         <br>
         <nav>

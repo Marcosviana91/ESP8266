@@ -1,12 +1,76 @@
 <!DOCTYPE html>
 <html lang='pt-br'>
-<!-- Este arquivo é o modelo usado para gerar o arquivo no ESP8266 -->
-
+<!--
+    Este arquivo é o modelo usado para gerar o arquivo no ESP8266
+    Palavras chaves serão substituídas por valores calculados pelo sistema:
+    $text_GPIO_D0$ será substituído pelo valor 'ligado' ou 'desligado' de acordo com seu estado.
+    $name_GPIO_D0$ será substituído pelo 'nome' da porta (D0 ... A0)
+-->
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <title>ESP8266 | Página Principal.</title>
-    <link rel="stylesheet" href="style.css">
+    <meta http-equiv='refresh' content='2'>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        body {
+            background-color: aqua;
+        }
+        h1, h2, h3{
+            text-align: center;
+            padding: 5px;
+        }
+        p {
+            padding: 3px;
+        }
+        hr {
+            width: 75%;
+            margin: 10px auto;
+            border-color: aquamarine;
+        }
+        #GPIOs, #funcoes {
+            margin: 10px;
+            padding: 5px 10px;
+            border: 1px solid black;
+            border-radius: 15px;
+            background-color: aquamarine;
+        }
+        .ligado > strong {
+            color: blue;
+            text-transform: uppercase;
+        }
+        .desligado > strong {
+            color: red;
+            text-transform: uppercase;
+        }
+        input {
+            text-align: right;
+            background-color: aqua;
+        }
+        footer > nav {
+            background-color: rgb(0, 112, 112);
+            padding: 10px;
+        }
+        footer > nav > a {
+            transition: 200ms;
+            margin-right: 10px;
+            color: black;
+            text-decoration: none;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        footer > nav > a:hover {
+            color: black;
+            background-color: aquamarine;
+        }
+        footer > nav > a:visited {
+            color: rgb(26, 26, 26);
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,24 +82,53 @@
         </p>
         <hr>
     </header>
-    <main id="estados">
-
+    <main>
         <h2>Estado das GPIOs</h2>
-        <p>Estado atual das GPIOs:</p>
-        <div id='GPIOs'>
-            <p>Dados fictícios:</p>
-            <p id='Ligado'>D0: <strong>Ligado</strong>. </p>
-            <p id='Desligado'>D1: <strong>Desligado</strong>. </p>
-            <p id='Desligado'>D2: <strong>Desligado</strong>. </p>
-            <p id='Ligado'>D2: <strong>Ligado</strong>. </p>
-        </div>
+        <section id='GPIOs'>
+            <p class='$text_GPIO_A0$'>
+                $name_GPIO_A0$: <input value='GPIO_A0$' readonly>
+            </p>
+            <p class='ligado'>
+                $name_GPIO_D0$: <strong>$text_GPIO_D0$</strong>.
+            </p>
+            <p class='desligado'>
+                $name_GPIO_D1$: <strong>$text_GPIO_D1$</strong>.
+            </p>
+            <p class='$text_GPIO_D2$'>
+                $name_GPIO_D2$: <strong>$text_GPIO_D2$</strong>.
+            </p>
+            <p class='$text_GPIO_D3$'>
+                $name_GPIO_D3$: <strong>$text_GPIO_D3$</strong>.
+            </p>
+            <p class='$text_GPIO_D4$'>
+                $name_GPIO_D4$: <strong>$text_GPIO_D4$</strong>.
+            </p>
+            <p class='$text_GPIO_D5$'>
+                $name_GPIO_D5$: <strong>$text_GPIO_D5$</strong>.
+            </p>
+            <p class='$text_GPIO_D6$'>
+                $name_GPIO_D6$: <strong>$text_GPIO_D6$</strong>.
+            </p>
+            <p class='$text_GPIO_D7$'>
+                $name_GPIO_D7$: <strong>$text_GPIO_D7$</strong>.
+            </p>
+            <p class='$text_GPIO_D8$'>
+                $name_GPIO_D8$: <strong>$text_GPIO_D8$</strong>.
+            </p>
+            <p class='$text_GPIO_D9$'>
+                $name_GPIO_D9$: <strong>$text_GPIO_D9$</strong>.
+            </p>
+            <p class='$text_GPIO_D10$'>
+                $name_GPIO_D10$: <strong>$text_GPIO_D10$</strong>.
+            </p>
+        </section>
     </main>
     <footer>
         <hr>
         <br>
         <nav>
-            <a href="../">Início</a>
-            <a href="./controles">Controles</a>
+            <a href='../'>Início</a>
+            <a href='./controles'>Controles</a>
         </nav>
     </footer>
 </body>
