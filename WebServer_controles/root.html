@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang='pt-br'>
 <!--
-    Este arquivo é o modelo usado para gerar o arquivo no ESP8266
-    Palavras chaves serão substituídas por valores calculados pelo sistema:
-    $text_GPIO_D0$ será substituído pelo valor 'ligado' ou 'desligado' de acordo com seu estado.
-    $name_GPIO_D0$ será substituído pelo 'nome' da porta (D0 ... A0)
+Este arquivo é o modelo usado para gerar o arquivo no ESP8266
+Palavras chaves serão substituídas por valores calculados pelo sistema:
+$text_GPIO_D0$ será substituído pelo valor 'ligado' ou 'desligado' de acordo com seu estado.
+$name_GPIO_D0$ será substituído pelo 'nome' da porta (D0 ... A0)
 -->
+
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -16,45 +17,58 @@
             margin: 0px;
             padding: 0px;
         }
+
         body {
             background-color: aqua;
         }
-        h1, h2, h3{
+
+        h1,
+        h2,
+        h3 {
             text-align: center;
             padding: 5px;
         }
+
         p {
             padding: 3px;
         }
+
         hr {
             width: 75%;
             margin: 10px auto;
             border-color: aquamarine;
         }
-        #GPIOs, #funcoes {
+
+        #GPIOs,
+        #funcoes {
             margin: 10px;
             padding: 5px 10px;
             border: 1px solid black;
             border-radius: 15px;
             background-color: aquamarine;
         }
-        .ligado > strong {
+
+        .ligado>strong {
             color: blue;
             text-transform: uppercase;
         }
-        .desligado > strong {
+
+        .desligado>strong {
             color: red;
             text-transform: uppercase;
         }
+
         input {
             text-align: right;
             background-color: aqua;
         }
-        footer > nav {
+
+        footer>nav {
             background-color: rgb(0, 112, 112);
             padding: 10px;
         }
-        footer > nav > a {
+
+        footer>nav>a {
             transition: 200ms;
             margin-right: 10px;
             color: black;
@@ -62,11 +76,13 @@
             padding: 5px;
             border-radius: 5px;
         }
-        footer > nav > a:hover {
+
+        footer>nav>a:hover {
             color: black;
             background-color: aquamarine;
         }
-        footer > nav > a:visited {
+
+        footer>nav>a:visited {
             color: rgb(26, 26, 26);
             text-decoration: none;
         }
@@ -88,10 +104,10 @@
             <p class='$text_GPIO_A0$'>
                 $name_GPIO_A0$: <input value='GPIO_A0$' readonly>
             </p>
-            <p class='ligado'>
+            <p class='$text_GPIO_D0$'>
                 $name_GPIO_D0$: <strong>$text_GPIO_D0$</strong>.
             </p>
-            <p class='desligado'>
+            <p class='$text_GPIO_D1$'>
                 $name_GPIO_D1$: <strong>$text_GPIO_D1$</strong>.
             </p>
             <p class='$text_GPIO_D2$'>
