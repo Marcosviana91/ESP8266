@@ -37,7 +37,7 @@
             border-color: aquamarine;
         }
 
-        #GPIOs, #funcoes {
+        #status, #funcoes, #control {
             margin: 10px;
             padding: 5px 10px;
             border: 1px solid black;
@@ -79,22 +79,6 @@
             background-color: aqua;
         }
 
-        footer>nav {
-            background-color: rgb(0, 112, 112);
-            padding: 10px;
-        }
-        footer a {
-            transition: 200ms;
-            margin-right: 10px;
-            color: white;
-            text-decoration: none;
-            padding: 5px;
-            border-radius: 5px;
-        }
-        footer a:hover {
-            color: black;
-            background-color: aquamarine;
-        }
     </style>
 </head>
 
@@ -126,7 +110,7 @@
                 </form>
             </div>
         </section>
-        <section id='GPIOs'>
+        <section id='control'>
             <h3>PORTAS:</h3>
             <form action='' method='post'>
                 <input type='hidden' name='porta' value='-1'>
@@ -147,15 +131,6 @@
                 </form>
         </section>
     </main>
-    <footer>
-        <br>
-        <hr>
-        <br>
-        <nav>
-            <a href='../'>Início</a>
-            <a href='./controles'>Controles</a>
-        </nav>
-    </footer>
 </body>
 
 </html>

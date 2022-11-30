@@ -16,6 +16,11 @@
 //A0 porta analógica
 int PORTAS[] = {16, 5, 4, 0, 2, 14, 12, 13, 15, 3, 1};// 11 portas
 
+//Placa atual NodeMCU ou ESP01 (false)
+String device = "ESP8266";
+int num_portas = 4;
+//String device = "ESP01";
+
 int porta_atual, porta_anterior;
 char funcao_atual = 'p';//t: testar() p: piscar() a: acender() (um por vez)
 String leitura;
@@ -28,7 +33,7 @@ void testar();
 int tempo = 500;
 
 void apagarTudo() {
-  for (int x = 0; x < 11; x++) {
+  for (int x = 0; x < num_portas; x++) {
     digitalWrite(PORTAS[x], 0);
   }
 }
@@ -42,27 +47,47 @@ const char* password = "778D54EB67";
 ESP8266WebServer server(80);
 
 void handleRoot() {
-  String pagina_Head = "<!DOCTYPE html><html lang='pt-br'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>ESP8266 | Página Principal.</title><meta http-equiv='refresh' content='2'><style>* {margin: 0px;padding: 0px;}body {background-color: aqua;}h1,h2,h3 {text-align: center;padding: 5px;}p {padding: 3px;}hr {width: 75%;margin: 10px auto;border-color: aquamarine;}#GPIOs,#funcoes {margin: 10px;padding: 5px 10px;border: 1px solid black;border-radius: 15px;background-color: aquamarine;}.ligado>strong {color: blue;text-transform: uppercase;}.desligado>strong {color: red;text-transform: uppercase;}input {text-align: right;background-color: aqua;}footer>nav {background-color: rgb(0, 112, 112);padding: 10px;}footer>nav>a {transition: 200ms;margin-right: 10px;color: black;text-decoration: none;padding: 5px;border-radius: 5px;}footer>nav>a:hover {color: black;background-color: aquamarine;}footer>nav>a:visited {color: rgb(26, 26, 26);text-decoration: none;}</style></head>";
-  String pagina_Body = "<body><header><h1>Bem-Vindo!</h1><p>Está é a página principal do ESP8266, construída pela função <strong>handleRoot()</strong>. Para modificaresta página, modifique esta função.</p><hr></header>";
-  String pagina_Main = "<main><h2>Estado das GPIOs</h2><section id='GPIOs'>";
-  
-  pagina_Main += "<p>A0: <input value='";
-  pagina_Main += analogRead(A0);
-  pagina_Main += "' readonly></p>";
-  for (int p = 0; p < 11; p++)
-  {
-    String classeName = (digitalRead(PORTAS[p])) ? "ligado" : "desligado";
-    pagina_Main += "<p class='" + classeName + "'>D" +p+ ": <strong>" +classeName+ "</strong>.</p>";
+  String pagina_Head = "<!DOCTYPE html><html lang='pt-br'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'><title>" + device + " | Página Principal.";
+  pagina_Head += "</title><meta http-equiv='refresh' content='2'><style>* {margin: 0px;padding: 0px;}body {background-color: aqua;}h1,h2,h3 {text-align: center;padding: 5px;}p {padding: 3px;}hr {width: 75%;margin: 10px auto;border-color: aquamarine;}.lista {max-width: 60%;margin: 20px auto;padding: 5px 10px;border: 1px solid black;border-radius: 15px;background-color: aquamarine;}.ligado>strong {color: blue;text-transform: uppercase;}.desligado>strong {color: red;text-transform: uppercase;}.funcoes>form {display: inline;}button {transition-duration: 100ms;border-radius: 5px;border: 1px solid black;padding: 5px;margin: 2px;box-shadow: 1px 1px black;}button:hover {background-color: rgb(0, 138, 138);color: white;box-shadow: inset 1px 1px black;}input {text-align: right;background-color: aqua;}</style></head>";
+  String pagina_Body = "<body><header><h1>Bem-Vindo!</h1><p>Está é a página principal do " + device + ", construída pela função <strong>handleRoot()</strong>. Para modificaresta página, modifique esta função.</p><hr></header>";
+  String pagina_Main = "<main><section class='lista'><h2>Estado das GPIOs</h2>";
+
+  if (device == "ESP8266") {
+    pagina_Main += "A0: <input value='";
+    pagina_Main += analogRead(A0);
+    pagina_Main += "' readonly>";
+    num_portas = 11;
   }
-  pagina_Main += "</section></main>";
-  String pagina_Footer = "<footer><hr><br><nav><a href='../'>Início</a><a href='./controles'>Controles</a></nav></footer></body></html>";
-  
+  pagina_Main += "<div id='portas'>";
+  for (int p = 0; p < num_portas; p++)
+  {
+    String classeName = (digitalRead(PORTAS[p])) ? "" : "des";
+    pagina_Main += "<form action='' method='post'><input type='hidden' name='porta' value='" + String(p) + "'>D" +String(p)+ ":<button class='";
+    classeName = (digitalRead(PORTAS[p])) ? "des" : "";
+    pagina_Main += classeName+"ligado'><strong>"+classeName+"ligar</strong></button></form>";
+  }
+  pagina_Main += "</div></section>";
+  pagina_Main += "<section class='lista'><h3>FUNÇÕES:</h3><div class='funcoes'><form action='' method='post'><input type='hidden' name='funcao' value='a'><button>Manter Aceso</button></form><form action='' method='post'><input type='hidden' name='funcao' value='p'><button>Manter piscando</button></form><form action='' method='post'><input type='hidden' name='funcao' value='t'><button>Apenas testar</button></form><form action='' method='post'><input type='hidden' name='porta' value='-1'><button>Desligar Tudo</button></form></div></section></main>";
+  String pagina_Footer = "</body></html>";
+
   //pagina_Body $text_GPIO_D0$ $name_GPIO_D0$
   String pagina_final = pagina_Head + pagina_Body + pagina_Main + pagina_Footer;
 
-//  for (int portas = 0; portas <= 11; portas++) {
-//    pagina.Body.
-//  }
+  for (int i = 0; i < server.args(); i++) {
+    if ( (server.argName(i) == "porta") )
+    {
+      porta_atual = server.arg(i).toInt();
+      Serial.println(porta_atual);
+      if (porta_atual == porta_anterior) {
+        porta_anterior = -1;
+      }
+    }
+    else if ( (server.argName(i) == "funcao") )
+    {
+      funcao_atual = server.arg(i)[0];
+    }
+  }
+
   digitalWrite(D4, !digitalRead(D4));
   server.send(200, "text/html", pagina_final);
   digitalWrite(D4, !digitalRead(D4));
@@ -78,7 +103,7 @@ void handleNotFound() {
   message += "\nArguments: ";
   message += server.args();
   message += "\n";
-  for (uint8_t i = 0; i < server.args(); i++) {
+  for (int i = 0; i < server.args(); i++) {
     message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
   server.send(404, "text/plain", message);
@@ -165,6 +190,7 @@ void lerSerial() {
       }
     } else {
       Serial.println("Comando não reconhecido.");
+      Serial.println(WiFi.localIP());
     }
   }
 }
