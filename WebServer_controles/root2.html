@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang='pt-br'>
+<!--
+Este arquivo é o modelo usado para gerar o arquivo no ESP8266
+Palavras chaves serão substituídas por valores calculados pelo sistema:
+$text_GPIO_D0$ será substituído pelo valor 'ligado' ou 'desligado' de acordo com seu estado.
+$name_GPIO_D0$ será substituído pelo 'nome' da porta (D0 ... A0)
+-->
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>ESP8266 | Página Principal.</title>
+    <meta http-equiv='refresh' content='2'>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            background-color: aqua;
+        }
+
+        h1,
+        h2,
+        h3 {
+            text-align: center;
+            padding: 5px;
+        }
+
+        p {
+            padding: 3px;
+        }
+
+        hr {
+            width: 75%;
+            margin: 10px auto;
+            border-color: aquamarine;
+        }
+
+        .lista {
+            max-width: 60%;
+            margin: 20px auto;
+            padding: 5px 10px;
+            border: 1px solid black;
+            border-radius: 15px;
+            background-color: aquamarine;
+        }
+
+        .ligado>strong {
+            color: blue;
+            text-transform: uppercase;
+        }
+
+        .desligado>strong {
+            color: red;
+            text-transform: uppercase;
+        }
+
+        .funcoes>form {
+            display: inline;
+        }
+
+        button {
+            transition-duration: 100ms;
+            border-radius: 5px;
+            border: 1px solid black;
+            padding: 5px;
+            margin: 2px;
+            box-shadow: 1px 1px black;
+        }
+
+        button:hover {
+            background-color: rgb(0, 138, 138);
+            color: white;
+            box-shadow: inset 1px 1px black;
+        }
+
+        input {
+            text-align: right;
+            background-color: aqua;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Bem-Vindo!</h1>
+        <p>
+            Está é a página principal do ESP8266, construída pela função <strong>handleRoot()</strong>. Para modificar
+            esta página, modifique esta função.
+        </p>
+        <hr>
+    </header>
+    <main>
+        <section class='lista'>
+            <h2>Estado das GPIOs</h2>
+            A0: <input value='GPIO_A0$' readonly>
+            <div id='portas'>
+                <form action='' method='post'>
+                    <input type='hidden' name='porta' value='0'>
+                    D0:
+                    <button class='desligado'><strong>desligar</strong></button>
+                </form>
+                <form action='' method='post'>
+                    <input type='hidden' name='porta' value='0'>
+                    D1:
+                    <button class='desligado'><strong>desligar</strong></button>
+                </form>
+            </div>
+        </section>
+        <section class='lista'>
+            <h3>FUNÇÕES:</h3>
+            <div class='funcoes'>
+                <form action='' method='post'>
+                    <input type='hidden' name='funcao' value='a'>
+                    <button>Manter Aceso</button>
+                </form>
+                <form action='' method='post'>
+                    <input type='hidden' name='funcao' value='p'>
+                    <button>Manter piscando</button>
+                </form>
+                <form action='' method='post'>
+                    <input type='hidden' name='funcao' value='t'>
+                    <button>Apenas testar</button>
+                </form>
+                <form action='' method='post'>
+                    <input type='hidden' name='porta' value='-1'>
+                    <button>Desligar Tudo</button>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

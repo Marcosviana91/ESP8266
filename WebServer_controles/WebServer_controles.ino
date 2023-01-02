@@ -38,11 +38,11 @@ void apagarTudo() {
   }
 }
 
-//const char* ssid = "Marcos Viana";
-//const char* password = "12345677";
+const char* ssid = "Marcos Viana";
+const char* password = "12345677";
 
-const char* ssid = "VIVOFIBRA-5A70";
-const char* password = "778D54EB67";
+//const char* ssid = "VIVOFIBRA-5A70";
+//const char* password = "778D54EB67";
 
 ESP8266WebServer server(80);
 
